@@ -14,8 +14,6 @@ func (c *Config) Prepare() error {
 	}
 
 	if len(c.ErrgroupPackagePaths) == 0 {
-		// TODO: log
-
 		c.ErrgroupPackagePaths = []string{
 			DefaultPkgPath,
 		}

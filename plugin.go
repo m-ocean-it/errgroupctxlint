@@ -15,7 +15,7 @@ type Plugin struct {
 	settings func_visitor.Config
 }
 
-func New(settings any) (register.LinterPlugin, error) {
+func New(settings any) (register.LinterPlugin, error) { //nolint:ireturn
 	s, err := register.DecodeSettings[func_visitor.Config](settings)
 	if err != nil {
 		return nil, err
