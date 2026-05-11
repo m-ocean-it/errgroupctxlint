@@ -19,23 +19,23 @@ func DefaultConfig() func_visitor.Config {
 }
 
 func NewAnalyzer() *analysis.Analyzer {
-	return NewAnalyzerWithConfig(DefaultConfig())
+	return NewAnalyzerWithConfigProvider(DefaultConfig)
 }
 
-func NewAnalyzerWithConfig(cfg func_visitor.Config) *analysis.Analyzer {
-	return newAnalyzer(cfg)
+func NewAnalyzerWithConfigProvider(cfg func() func_visitor.Config) *analysis.Analyzer {
+	return newAnalyzer(getRunFuncWithConfigProvider(cfg))
 }
 
-func newAnalyzer(cfg func_visitor.Config) *analysis.Analyzer {
+func newAnalyzer(runFunc func(*analysis.Pass) (any, error)) *analysis.Analyzer {
 	return &analysis.Analyzer{ //nolint:exhaustruct
 		Name:     "errgroupctx",
 		Doc:      "Checks that errgroup closures use the context derived from a corresponding errgroup",
-		Run:      Run(cfg),
+		Run:      runFunc,
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
 	}
 }
 
-func Run(cfg func_visitor.Config) func(*analysis.Pass) (any, error) {
+func getRunFuncWithConfigProvider(cfg func() func_visitor.Config) func(*analysis.Pass) (any, error) {
 	return func(pass *analysis.Pass) (any, error) {
 		inspector, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 		if !ok {
@@ -49,7 +49,7 @@ func Run(cfg func_visitor.Config) func(*analysis.Pass) (any, error) {
 			(*ast.CallExpr)(nil),
 		}
 
-		thisFuncVisitor := func_visitor.New(pass, cfg)
+		thisFuncVisitor := func_visitor.New(pass, cfg())
 
 		inspector.WithStack(nodeFilter, thisFuncVisitor.Visit)
 

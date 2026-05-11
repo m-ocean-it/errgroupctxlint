@@ -11,13 +11,15 @@ import (
 func Test_Analyzer(t *testing.T) {
 	t.Parallel()
 
+	cfg := func_visitor.Config{
+		ErrgroupPackagePaths: []string{
+			"github.com/m-ocean-it/errgroup-ctx-lint/testdata/base/errgroup",
+		},
+	}
+
 	analysistest.Run(
 		t,
 		filepath.Join(analysistest.TestData(), "base"),
-		NewAnalyzerWithConfig(func_visitor.Config{
-			ErrgroupPackagePaths: []string{
-				"github.com/m-ocean-it/errgroup-ctx-lint/testdata/base/errgroup",
-			},
-		}),
+		NewAnalyzerWithConfigProvider(func() func_visitor.Config { return cfg }),
 	)
 }
