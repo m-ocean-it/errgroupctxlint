@@ -4,14 +4,13 @@ import (
 	"errors"
 	"go/ast"
 
-	"github.com/m-ocean-it/errgroup-ctx-lint/analyzer/func_visitor"
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/inspect"
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-func DefaultConfig() func_visitor.Config {
-	return func_visitor.Config{
+func DefaultConfig() FuncVisitorConfig {
+	return FuncVisitorConfig{
 		ErrgroupPackagePaths: []string{
 			"golang.org/x/sync/errgroup",
 		},
@@ -22,7 +21,7 @@ func NewAnalyzer() *analysis.Analyzer {
 	return NewAnalyzerWithConfigProvider(DefaultConfig)
 }
 
-func NewAnalyzerWithConfigProvider(cfg func() func_visitor.Config) *analysis.Analyzer {
+func NewAnalyzerWithConfigProvider(cfg func() FuncVisitorConfig) *analysis.Analyzer {
 	return newAnalyzer(getRunFuncWithConfigProvider(cfg))
 }
 
@@ -35,7 +34,7 @@ func newAnalyzer(runFunc func(*analysis.Pass) (any, error)) *analysis.Analyzer {
 	}
 }
 
-func getRunFuncWithConfigProvider(cfg func() func_visitor.Config) func(*analysis.Pass) (any, error) {
+func getRunFuncWithConfigProvider(cfg func() FuncVisitorConfig) func(*analysis.Pass) (any, error) {
 	return func(pass *analysis.Pass) (any, error) {
 		inspector, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 		if !ok {
@@ -49,7 +48,7 @@ func getRunFuncWithConfigProvider(cfg func() func_visitor.Config) func(*analysis
 			(*ast.CallExpr)(nil),
 		}
 
-		thisFuncVisitor := func_visitor.New(pass, cfg())
+		thisFuncVisitor := newFuncVisitor(pass, cfg())
 
 		inspector.WithStack(nodeFilter, thisFuncVisitor.Visit)
 

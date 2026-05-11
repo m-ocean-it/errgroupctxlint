@@ -1,14 +1,14 @@
-package func_visitor
+package analyzer
 
 import "errors"
 
 const DefaultPkgPath = "golang.org/x/sync/errgroup"
 
-type Config struct {
+type FuncVisitorConfig struct {
 	ErrgroupPackagePaths []string `json:"errgroup_package_paths"`
 }
 
-func (c *Config) Prepare() error {
+func (c *FuncVisitorConfig) prepare() error {
 	if c == nil {
 		return errors.New("config is nil")
 	}

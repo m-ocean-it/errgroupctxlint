@@ -1,14 +1,9 @@
-package func_visitor
+package analyzer
 
 import (
 	"go/types"
 	"slices"
 )
-
-type CommentPosition struct {
-	Filename string
-	Line     int
-}
 
 type errgroupStack []errgroupStackElement
 
@@ -19,7 +14,7 @@ type errgroupStackElement struct {
 	depth    int
 }
 
-func (s errgroupStack) Trim(depth int) errgroupStack {
+func (s errgroupStack) trim(depth int) errgroupStack {
 	if len(s) == 0 {
 		return s
 	}
@@ -33,9 +28,9 @@ func (s errgroupStack) Trim(depth int) errgroupStack {
 	return s
 }
 
-// FindByGroup returns the most recent stack element matching the given group
+// findByGroup returns the most recent stack element matching the given group
 // variable object.
-func (s errgroupStack) FindByGroup(groupObj types.Object) *errgroupStackElement {
+func (s errgroupStack) findByGroup(groupObj types.Object) *errgroupStackElement {
 	for _, frame := range slices.Backward(s) {
 		if frame.groupObj == groupObj {
 			return &frame
