@@ -94,86 +94,6 @@ func Incorrect_AssignStmt_AliasedImport() error {
 	return eg.Wait()
 }
 
-func Incorrect_AssignStmt_Nolint() error {
-	ctx := context.Background()
-
-	eg, egCtx := errgroup.WithContext(ctx)
-
-	eg.Go(func() error {
-		return doSmth(ctx) //nolint
-	})
-
-	eg.Go(func() error {
-		return doSmth(egCtx)
-	})
-
-	return eg.Wait()
-}
-
-func Incorrect_AssignStmt_Nolint_ErrGroupCtxLint() error {
-	ctx := context.Background()
-
-	eg, egCtx := errgroup.WithContext(ctx)
-
-	eg.Go(func() error {
-		return doSmth(ctx) //nolint:errgroupctx
-	})
-
-	eg.Go(func() error {
-		return doSmth(egCtx)
-	})
-
-	return eg.Wait()
-}
-
-func Incorrect_AssignStmt_Nolint_ErrGroupCtxLint_WithOtherLinters() error {
-	ctx := context.Background()
-
-	eg, egCtx := errgroup.WithContext(ctx)
-
-	eg.Go(func() error {
-		return doSmth(ctx) //nolint:abc,errgroupctx,xyz
-	})
-
-	eg.Go(func() error {
-		return doSmth(egCtx)
-	})
-
-	return eg.Wait()
-}
-
-func Incorrect_AssignStmt_Nolint_All() error {
-	ctx := context.Background()
-
-	eg, egCtx := errgroup.WithContext(ctx)
-
-	eg.Go(func() error {
-		return doSmth(ctx) //nolint:all
-	})
-
-	eg.Go(func() error {
-		return doSmth(egCtx)
-	})
-
-	return eg.Wait()
-}
-
-func Incorrect_AssignStmt_Nolint_All_WithOtherLinters() error {
-	ctx := context.Background()
-
-	eg, egCtx := errgroup.WithContext(ctx)
-
-	eg.Go(func() error {
-		return doSmth(ctx) //nolint:abc,all,xyz
-	})
-
-	eg.Go(func() error {
-		return doSmth(egCtx)
-	})
-
-	return eg.Wait()
-}
-
 func Incorrect_AssignStmt_Nolint_ForOtherLinters() error {
 	ctx := context.Background()
 
@@ -842,30 +762,6 @@ func TryGo_NestedGoroutine() {
 		go func() {
 			<-ctx.Done() // want `errgroup callback should probably not reference outer context "ctx", use the errgroup-derived context "egCtx"`
 		}()
-		return nil
-	})
-	eg.Wait()
-}
-
-// Nolint on new detection patterns
-
-func Nolint_CtxDone() {
-	ctx := context.Background()
-	eg, egCtx := errgroup.WithContext(ctx)
-	_ = egCtx
-	eg.Go(func() error {
-		<-ctx.Done() //nolint
-		return nil
-	})
-	eg.Wait()
-}
-
-func Nolint_ForOtherLinters_CtxDone() {
-	ctx := context.Background()
-	eg, egCtx := errgroup.WithContext(ctx)
-	_ = egCtx
-	eg.Go(func() error {
-		<-ctx.Done() //nolint:abc,xyz // // want `errgroup callback should probably not reference outer context "ctx", use the errgroup-derived context "egCtx"`
 		return nil
 	})
 	eg.Wait()

@@ -11,19 +11,12 @@ import (
 )
 
 type funcVisitor struct {
-	cfg Config
-
-	pass        *analysis.Pass
-	nolintLines map[CommentPosition]struct{}
-
+	cfg           Config
+	pass          *analysis.Pass
 	errgroupStack errgroupStack
 }
 
-func New(
-	pass *analysis.Pass,
-	nolintLines map[CommentPosition]struct{},
-	cfg Config,
-) *funcVisitor {
+func New(pass *analysis.Pass, cfg Config) *funcVisitor {
 	if err := cfg.Prepare(); err != nil {
 		log.Fatalf("invalid config: %s", err)
 	}
@@ -31,7 +24,6 @@ func New(
 	return &funcVisitor{
 		cfg:           cfg,
 		pass:          pass,
-		nolintLines:   nolintLines,
 		errgroupStack: nil,
 	}
 }
@@ -237,17 +229,6 @@ func isContextType(typ types.Type) bool {
 	return obj.Pkg() != nil && obj.Pkg().Path() == "context" && obj.Name() == "Context"
 }
 
-func positionIsNoLint(pos token.Pos, fset *token.FileSet, nolintPositions map[CommentPosition]struct{}) bool {
-	fullPosition := fset.Position(pos)
-
-	_, isNolint := nolintPositions[CommentPosition{
-		Filename: fullPosition.Filename,
-		Line:     fullPosition.Line,
-	}]
-
-	return isNolint
-}
-
 func callExprPkgIsErrgroup(callExpr *ast.CallExpr, typesInfo *types.Info, cfg Config) bool {
 	selExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
 	if !ok || selExpr == nil {
@@ -341,10 +322,6 @@ func (fv *funcVisitor) checkClosureForContexts(funcLit *ast.FuncLit, elem *errgr
 
 		// Allow contexts defined within the closure body
 		if obj.Pos() >= closureStart && obj.Pos() < closureEnd {
-			return true
-		}
-
-		if positionIsNoLint(ident.Pos(), fv.pass.Fset, fv.nolintLines) {
 			return true
 		}
 
