@@ -12,6 +12,7 @@ linters:
     - tagliatelle
     - wsl
     - wsl_v5
+    - testpackage
   settings:
     revive:
       rules:
