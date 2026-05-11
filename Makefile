@@ -1,4 +1,4 @@
-.PHONY: build run test clean
+.PHONY: build run test check clean
 
 SRC := $(shell find . -type f -name '*.go' ! -name '*_test.go')
 
@@ -12,6 +12,8 @@ test:
 
 lint:
 	golangci-lint run
+
+check: build test lint
 
 clean:
 	rm -rf ./bin
