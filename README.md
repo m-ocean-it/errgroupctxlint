@@ -16,7 +16,7 @@ eg.Go(func() error {
 	return doSmth(egCtx) // Correctly uses the context returned by "errgroup.WithContext"
 })
 
-eg.TryTo(func() error {
+eg.TryGo(func() error {
 	return doSmth(ctx) // want `errgroup callback should probably not reference outer context "ctx", use the errgroup-derived context "egCtx"`
 })
 ```
