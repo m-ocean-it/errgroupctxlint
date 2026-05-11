@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/m-ocean-it/errgroup-ctx-lint/analyzer"
-	"github.com/m-ocean-it/errgroup-ctx-lint/analyzer/func_visitor"
 	"golang.org/x/tools/go/analysis/singlechecker"
 )
 
@@ -16,7 +15,7 @@ func main() {
 	)
 	// flag.Parse will be called inside singlechecker.Main below.
 
-	configProvider := func() func_visitor.Config {
+	configProvider := func() analyzer.FuncVisitorConfig {
 		cfg := analyzer.DefaultConfig()
 
 		if strings.TrimSpace(*pkgsVar) == "" {

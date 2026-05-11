@@ -1,4 +1,4 @@
-package func_visitor
+package analyzer
 
 import (
 	"go/ast"
@@ -11,13 +11,13 @@ import (
 )
 
 type funcVisitor struct {
-	cfg           Config
+	cfg           FuncVisitorConfig
 	pass          *analysis.Pass
 	errgroupStack errgroupStack
 }
 
-func New(pass *analysis.Pass, cfg Config) *funcVisitor {
-	if err := cfg.Prepare(); err != nil {
+func newFuncVisitor(pass *analysis.Pass, cfg FuncVisitorConfig) *funcVisitor {
+	if err := cfg.prepare(); err != nil {
 		log.Fatalf("invalid config: %s", err)
 	}
 
@@ -30,7 +30,7 @@ func New(pass *analysis.Pass, cfg Config) *funcVisitor {
 
 func (fv *funcVisitor) Visit(node ast.Node, push bool, stack []ast.Node) bool {
 	if node == nil || !push {
-		fv.errgroupStack = fv.errgroupStack.Trim(len(stack))
+		fv.errgroupStack = fv.errgroupStack.trim(len(stack))
 
 		return false
 	}
@@ -69,7 +69,7 @@ func (fv *funcVisitor) visitCallExpr(callExpr *ast.CallExpr) {
 		return
 	}
 
-	elem := fv.errgroupStack.FindByGroup(recvObj)
+	elem := fv.errgroupStack.findByGroup(recvObj)
 	if elem == nil {
 		return
 	}
@@ -159,7 +159,7 @@ func (fv *funcVisitor) visitDeclStmt(declStmt *ast.DeclStmt, depth int) {
 	}
 }
 
-func fillStackElemFromIdents(elem *errgroupStackElement, idents []*ast.Ident, typesInfo *types.Info, cfg Config) {
+func fillStackElemFromIdents(elem *errgroupStackElement, idents []*ast.Ident, typesInfo *types.Info, cfg FuncVisitorConfig) {
 	for _, ident := range idents {
 		if ident.Name == "_" {
 			continue
@@ -229,7 +229,7 @@ func isContextType(typ types.Type) bool {
 	return obj.Pkg() != nil && obj.Pkg().Path() == "context" && obj.Name() == "Context"
 }
 
-func callExprPkgIsErrgroup(callExpr *ast.CallExpr, typesInfo *types.Info, cfg Config) bool {
+func callExprPkgIsErrgroup(callExpr *ast.CallExpr, typesInfo *types.Info, cfg FuncVisitorConfig) bool {
 	selExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
 	if !ok || selExpr == nil {
 		return false
@@ -256,7 +256,7 @@ func callExprPkgIsErrgroup(callExpr *ast.CallExpr, typesInfo *types.Info, cfg Co
 	return errgroupPkgPathIsEnabled(cfg, selPkgNameImported.Path())
 }
 
-func errgroupPkgPathIsEnabled(cfg Config, packagePath string) bool {
+func errgroupPkgPathIsEnabled(cfg FuncVisitorConfig, packagePath string) bool {
 	return slices.Contains(cfg.ErrgroupPackagePaths, packagePath)
 }
 
@@ -333,7 +333,7 @@ func (fv *funcVisitor) checkClosureForContexts(funcLit *ast.FuncLit, elem *errgr
 	})
 }
 
-func tryGetErrgroupClosureFromCallExpr(callExpr *ast.CallExpr, typesInfo *types.Info, cfg Config) *ast.FuncLit {
+func tryGetErrgroupClosureFromCallExpr(callExpr *ast.CallExpr, typesInfo *types.Info, cfg FuncVisitorConfig) *ast.FuncLit {
 	sel, ok := callExpr.Fun.(*ast.SelectorExpr)
 	if !ok {
 		return nil

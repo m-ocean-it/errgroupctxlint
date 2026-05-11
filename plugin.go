@@ -3,7 +3,6 @@ package errgroupctxlint
 import (
 	"github.com/golangci/plugin-module-register/register"
 	"github.com/m-ocean-it/errgroup-ctx-lint/analyzer"
-	"github.com/m-ocean-it/errgroup-ctx-lint/analyzer/func_visitor"
 	"golang.org/x/tools/go/analysis"
 )
 
@@ -12,11 +11,11 @@ func init() {
 }
 
 type Plugin struct {
-	settings func_visitor.Config
+	settings analyzer.FuncVisitorConfig
 }
 
 func New(settings any) (register.LinterPlugin, error) { //nolint:ireturn
-	s, err := register.DecodeSettings[func_visitor.Config](settings)
+	s, err := register.DecodeSettings[analyzer.FuncVisitorConfig](settings)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +25,7 @@ func New(settings any) (register.LinterPlugin, error) { //nolint:ireturn
 
 func (f *Plugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
 	return []*analysis.Analyzer{
-		analyzer.NewAnalyzerWithConfigProvider(func() func_visitor.Config { return f.settings }),
+		analyzer.NewAnalyzerWithConfigProvider(func() analyzer.FuncVisitorConfig { return f.settings }),
 	}, nil
 }
 
