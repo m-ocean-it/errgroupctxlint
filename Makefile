@@ -1,4 +1,4 @@
-.PHONY: build run test check clean
+.PHONY: build run test lint check clean
 
 SRC := $(shell find . -type f -name '*.go' ! -name '*_test.go')
 
