@@ -26,7 +26,7 @@ func New(settings any) (register.LinterPlugin, error) { //nolint:ireturn
 
 func (f *Plugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
 	return []*analysis.Analyzer{
-		analyzer.NewAnalyzerWithConfig(f.settings),
+		analyzer.NewAnalyzerWithConfigProvider(func() func_visitor.Config { return f.settings }),
 	}, nil
 }
 
