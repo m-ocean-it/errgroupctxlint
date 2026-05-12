@@ -1,4 +1,4 @@
-package errgroupctxlint
+package plugin
 
 import (
 	"github.com/golangci/plugin-module-register/register"
