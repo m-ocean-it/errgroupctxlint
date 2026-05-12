@@ -1,25 +1,23 @@
-.PHONY: build run test lint check clean
+.PHONY: build
+build:
+	mkdir -p ./bin
+	go build -o ./bin/errgroupctxlint ./cmd/errgroupctxlint
 
-SRC := $(shell find . -type f -name '*.go' ! -name '*_test.go')
-
-build: ./bin/errgroupctxlint
-
+.PHONY: run
 run: build
 	./bin/errgroupctxlint
 
+.PHONY: test
 test:
 	go test ./...
 
+.PHONY: lint
 lint:
 	golangci-lint run
 
+.PHONY: check
 check: build test lint
 
+.PHONY: clean
 clean:
 	rm -rf ./bin
-
-./bin/errgroupctxlint: $(SRC) | ./bin
-	go build -o ./bin/errgroupctxlint ./cmd/errgroupctxlint
-
-./bin:
-	mkdir -p ./bin
