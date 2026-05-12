@@ -2,12 +2,12 @@ package errgroupctxlint
 
 import (
 	"github.com/golangci/plugin-module-register/register"
-	"github.com/m-ocean-it/errgroup-ctx-lint/analyzer"
+	"github.com/m-ocean-it/errgroupctxlint/analyzer"
 	"golang.org/x/tools/go/analysis"
 )
 
 func init() {
-	register.Plugin("errgroupctx", New)
+	register.Plugin("errgroupctxlint", New)
 }
 
 type Plugin struct {

@@ -1,4 +1,4 @@
-# errgroup-ctx-lint
+# errgroupctxlint
 
 
 ## About
@@ -26,18 +26,18 @@ A *lot* more cases are covered in the [`examples.go`](analyzer/testdata/base/exa
 
 ## Installation
 ```sh
-go install 'github.com/m-ocean-it/errgroup-ctx-lint/cmd/errgroup-ctx-lint@latest'
+go install 'github.com/m-ocean-it/errgroupctxlint/cmd/errgroupctxlint@latest'
 ```
 
 
 ## Usage
 ```sh
-errgroup-ctx-lint ./...
+errgroupctxlint ./...
 ```
 
 Or specify alternative `errgroup`-packages separated with commas:
 ```sh
-errgroup-ctx-lint -pkgs 'golang.org/x/sync/errgroup,github.com/johejo/semerrgroup,some.org/platform/errgroup/v2' ./...
+errgroupctxlint -pkgs 'golang.org/x/sync/errgroup,github.com/johejo/semerrgroup,some.org/platform/errgroup/v2' ./...
 ```
 
 
@@ -49,8 +49,8 @@ Prepare a `.custom-gcl.yml` file:
 ```yml
 version: v2.11.4
 plugins:
-  - module: "github.com/m-ocean-it/errgroup-ctx-lint"
-    import: "github.com/m-ocean-it/errgroup-ctx-lint"
+  - module: "github.com/m-ocean-it/errgroupctxlint"
+    import: "github.com/m-ocean-it/errgroupctxlint"
     version: latest
 ```
 
@@ -68,13 +68,13 @@ version: "2"
 linters:
   default: none
   enable:
-    - errgroupctx
+    - errgroupctxlint
   settings:
     custom:
-      errgroupctx:
+      errgroupctxlint:
         type: "module"
         settings:
-          errgroup_package_paths:
+          pkgs:
             # Specify alternative errgroup packages here, if needed, like so:
             # - golang.org/x/sync/errgroup
             # - errgroup1

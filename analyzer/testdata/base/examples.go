@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/m-ocean-it/errgroup-ctx-lint/testdata/base/errgroup"
-	erGr "github.com/m-ocean-it/errgroup-ctx-lint/testdata/base/errgroup"
+	"github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup"
+	erGr "github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup"
 )
 
 func Correct_AssignStmt() error {
