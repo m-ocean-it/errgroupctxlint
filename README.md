@@ -53,7 +53,7 @@ Prepare a `.custom-gcl.yml` file:
 version: v2.11.4
 plugins:
   - module: "github.com/m-ocean-it/errgroupctxlint"
-    import: "github.com/m-ocean-it/errgroupctxlint"
+    import: "github.com/m-ocean-it/errgroupctxlint/plugin"
     version: latest
 ```
 
