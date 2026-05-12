@@ -100,10 +100,12 @@ func (fv *funcVisitor) visitAssignStmt(assignStmt *ast.AssignStmt, depth int) {
 
 	var idents []*ast.Ident
 	for _, e := range assignStmt.Lhs {
-		id, _ := e.(*ast.Ident)
-		if id != nil {
-			idents = append(idents, id)
+		id, ok := e.(*ast.Ident)
+		if !ok || id == nil {
+			continue
 		}
+
+		idents = append(idents, id)
 	}
 
 	fillStackElemFromIdents(&newErrgroupElement, idents, fv.pass.TypesInfo, fv.cfg)
@@ -178,8 +180,8 @@ func fillStackElemFromIdents(elem *errgroupStackElement, idents []*ast.Ident, ty
 			continue
 		}
 
-		leftVar, _ := leftObj.(*types.Var)
-		if leftVar == nil {
+		leftVar, ok := leftObj.(*types.Var)
+		if !ok || leftVar == nil {
 			continue
 		}
 
@@ -188,8 +190,8 @@ func fillStackElemFromIdents(elem *errgroupStackElement, idents []*ast.Ident, ty
 			continue
 		}
 
-		leftPtr, _ := leftType.(*types.Pointer)
-		if leftPtr == nil {
+		leftPtr, ok := leftType.(*types.Pointer)
+		if !ok || leftPtr == nil {
 			continue
 		}
 
@@ -198,8 +200,8 @@ func fillStackElemFromIdents(elem *errgroupStackElement, idents []*ast.Ident, ty
 			continue
 		}
 
-		leftNamed, _ := leftElem.(*types.Named)
-		if leftNamed == nil {
+		leftNamed, ok := leftElem.(*types.Named)
+		if !ok || leftNamed == nil {
 			continue
 		}
 
@@ -244,8 +246,8 @@ func callExprPkgIsErrgroup(callExpr *ast.CallExpr, typesInfo *types.Info, cfg Fu
 	if selObj == nil {
 		return false
 	}
-	selPkgName, _ := selObj.(*types.PkgName)
-	if selPkgName == nil {
+	selPkgName, ok := selObj.(*types.PkgName)
+	if !ok || selPkgName == nil {
 		return false
 	}
 	selPkgNameImported := selPkgName.Imported()
@@ -365,7 +367,10 @@ func tryGetErrgroupClosureFromCallExpr(callExpr *ast.CallExpr, typesInfo *types.
 		return nil
 	}
 
-	funcLit, _ := callExpr.Args[0].(*ast.FuncLit)
+	funcLit, ok := callExpr.Args[0].(*ast.FuncLit)
+	if !ok {
+		return nil
+	}
 
 	return funcLit
 }
