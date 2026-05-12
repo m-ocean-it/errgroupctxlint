@@ -6,7 +6,7 @@ import (
 	"golang.org/x/tools/go/analysis"
 )
 
-func init() {
+func init() { //nolint:gochecknoinits
 	register.Plugin("errgroupctxlint", New)
 }
 
