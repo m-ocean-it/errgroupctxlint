@@ -2,10 +2,10 @@
 
 SRC := $(shell find . -type f -name '*.go' ! -name '*_test.go')
 
-build: ./bin/errgroup-ctx-lint
+build: ./bin/errgroupctxlint
 
 run: build
-	./bin/errgroup-ctx-lint
+	./bin/errgroupctxlint
 
 test:
 	go test ./...
@@ -18,8 +18,8 @@ check: build test lint
 clean:
 	rm -rf ./bin
 
-./bin/errgroup-ctx-lint: $(SRC) | ./bin
-	go build -o ./bin/errgroup-ctx-lint ./cmd/errgroup-ctx-lint
+./bin/errgroupctxlint: $(SRC) | ./bin
+	go build -o ./bin/errgroupctxlint ./cmd/errgroupctxlint
 
 ./bin:
 	mkdir -p ./bin

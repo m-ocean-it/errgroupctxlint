@@ -4,7 +4,7 @@ import (
 	"flag"
 	"strings"
 
-	"github.com/m-ocean-it/errgroup-ctx-lint/analyzer"
+	"github.com/m-ocean-it/errgroupctxlint/analyzer"
 	"golang.org/x/tools/go/analysis/singlechecker"
 )
 

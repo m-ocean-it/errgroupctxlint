@@ -1,4 +1,4 @@
-module github.com/m-ocean-it/errgroup-ctx-lint
+module github.com/m-ocean-it/errgroupctxlint
 
 go 1.25.0
 

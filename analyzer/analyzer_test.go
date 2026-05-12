@@ -12,7 +12,7 @@ func Test_Analyzer(t *testing.T) {
 
 	cfg := FuncVisitorConfig{
 		ErrgroupPackagePaths: []string{
-			"github.com/m-ocean-it/errgroup-ctx-lint/testdata/base/errgroup",
+			"github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup",
 		},
 	}
 
