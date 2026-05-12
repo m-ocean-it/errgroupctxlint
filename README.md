@@ -32,16 +32,19 @@ go install 'github.com/m-ocean-it/errgroupctxlint/cmd/errgroupctxlint@latest'
 
 ## Usage
 ```sh
-errgroupctxlint ./...
+errgroupctxlint ./...      # lint the whole project
+errgroupctxlint <package>  # or specific packages
 ```
 
-Or specify alternative `errgroup`-packages separated with commas:
+You can specify alternative `errgroup`-packages separated with commas (useful in case you project uses some fork(s)/wrapper(s)/alternative(s) to the original `errgroup` package):
 ```sh
 errgroupctxlint -pkgs 'golang.org/x/sync/errgroup,github.com/johejo/semerrgroup,some.org/platform/errgroup/v2' ./...
 ```
 
 
 ## [Golangci-lint](https://github.com/golangci/golangci-lint) plugin guide
+
+As of now (2026-05-12), the linter is not integrated into `golangci-lint`, however, you can build a custom version of `golangci-lint` with `errgroupctxlint` supported as a plugin. If you're interested in that, read below.
 
 Read the [official guide](https://golangci-lint.run/docs/plugins/module-plugins/).
 
