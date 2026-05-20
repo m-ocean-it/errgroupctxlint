@@ -16,6 +16,16 @@ type linter struct {
 	errgroupPackagePaths PackagePaths
 }
 
+func newLinter(pkgs []string) *linter {
+	l := &linter{
+		errgroupPackagePaths: []string{DefaultPkgPath},
+	}
+
+	l.errgroupPackagePaths = append(l.errgroupPackagePaths, pkgs...)
+
+	return l
+}
+
 func (l *linter) run(pass *analysis.Pass) (any, error) {
 	insp, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 	if !ok {
@@ -40,15 +50,13 @@ func (l *linter) run(pass *analysis.Pass) (any, error) {
 	return nil, nil //nolint:nilnil
 }
 
-func NewAnalyzer() *analysis.Analyzer {
-	l := &linter{
-		errgroupPackagePaths: []string{DefaultPkgPath},
-	}
+func NewAnalyzer(pkgs []string) *analysis.Analyzer {
+	l := newLinter(pkgs)
 
 	//nolint:exhaustruct
 	a := &analysis.Analyzer{
 		Name:     "errgroupctx",
-		Doc:      "Checks that errgroup closures use the context derived from a corresponding errgroup",
+		Doc:      "Checks that errgroup closures use the context derived from a corresponding errgroup.",
 		Run:      l.run,
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
 	}

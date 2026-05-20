@@ -1,9 +1,6 @@
 package plugin
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/golangci/plugin-module-register/register"
 	"github.com/m-ocean-it/errgroupctxlint/analyzer"
 	"golang.org/x/tools/go/analysis"
@@ -33,16 +30,7 @@ func New(settings any) (register.LinterPlugin, error) {
 }
 
 func (f *Plugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
-	a := analyzer.NewAnalyzer()
-
-	if len(f.settings.Packages) > 0 {
-		err := a.Flags.Set(analyzer.PackagePathsFlg, strings.Join(f.settings.Packages, ","))
-		if err != nil {
-			return nil, fmt.Errorf("configuration error: %w", err)
-		}
-	}
-
-	return []*analysis.Analyzer{a}, nil
+	return []*analysis.Analyzer{analyzer.NewAnalyzer(f.settings.Packages)}, nil
 }
 
 func (f *Plugin) GetLoadMode() string {
