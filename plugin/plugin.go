@@ -42,7 +42,7 @@ func (f *Plugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
 		}
 	}
 
-	return []*analysis.Analyzer{analyzer.NewAnalyzer()}, nil
+	return []*analysis.Analyzer{a}, nil
 }
 
 func (f *Plugin) GetLoadMode() string {
