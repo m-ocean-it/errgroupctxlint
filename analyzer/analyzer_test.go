@@ -10,15 +10,16 @@ import (
 func Test_Analyzer(t *testing.T) {
 	t.Parallel()
 
-	cfg := FuncVisitorConfig{
-		ErrgroupPackagePaths: []string{
-			"github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup",
-		},
+	analyzer := NewAnalyzer()
+
+	err := analyzer.Flags.Set("pkgs", "github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup")
+	if err != nil {
+		t.Fatal(err)
 	}
 
 	analysistest.Run(
 		t,
 		filepath.Join(analysistest.TestData(), "base"),
-		NewAnalyzerWithConfigProvider(func() FuncVisitorConfig { return cfg }),
+		analyzer,
 	)
 }

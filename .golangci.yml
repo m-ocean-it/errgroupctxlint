@@ -11,8 +11,8 @@ linters:
     - funlen
     - tagliatelle
     - wsl
-    - wsl_v5
     - testpackage
+    - gomodguard
   settings:
     revive:
       rules:

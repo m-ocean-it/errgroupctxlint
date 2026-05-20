@@ -1,22 +1,29 @@
 package analyzer
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 const DefaultPkgPath = "golang.org/x/sync/errgroup"
 
-type FuncVisitorConfig struct {
-	ErrgroupPackagePaths []string `json:"pkgs"`
-}
+type PackagePaths []string
 
-func (c *FuncVisitorConfig) prepare() error {
-	if c == nil {
-		return errors.New("config is nil")
+func (p *PackagePaths) String() string {
+	if p == nil {
+		return ""
 	}
 
-	if len(c.ErrgroupPackagePaths) == 0 {
-		c.ErrgroupPackagePaths = []string{
-			DefaultPkgPath,
-		}
+	return strings.Join(*p, ",")
+}
+
+func (p *PackagePaths) Set(value string) error {
+	if value == "" {
+		return errors.New("empty value")
+	}
+
+	for v := range strings.SplitSeq(value, ",") {
+		*p = append(*p, strings.TrimSpace(v))
 	}
 
 	return nil

@@ -2,6 +2,7 @@ package analyzer
 
 import (
 	"errors"
+	"flag"
 	"go/ast"
 
 	"golang.org/x/tools/go/analysis"
@@ -9,49 +10,53 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-func DefaultConfig() FuncVisitorConfig {
-	return FuncVisitorConfig{
-		ErrgroupPackagePaths: []string{
-			"golang.org/x/sync/errgroup",
-		},
+type linter struct {
+	errgroupPackagePaths PackagePaths
+}
+
+func (l *linter) run(pass *analysis.Pass) (any, error) {
+	insp, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return nil, errors.New("unexpectedly type is not *inspector.Inspector")
 	}
+
+	nodeFilter := []ast.Node{
+		(*ast.FuncDecl)(nil),
+		(*ast.AssignStmt)(nil),
+		(*ast.DeclStmt)(nil),
+		(*ast.CallExpr)(nil),
+	}
+
+	if len(l.errgroupPackagePaths) == 0 {
+		l.errgroupPackagePaths = append(l.errgroupPackagePaths, DefaultPkgPath)
+	}
+
+	visitor := newFuncVisitor(pass, l.errgroupPackagePaths)
+
+	insp.WithStack(nodeFilter, visitor.Visit)
+
+	return nil, nil //nolint:nilnil
 }
 
 func NewAnalyzer() *analysis.Analyzer {
-	return NewAnalyzerWithConfigProvider(DefaultConfig)
-}
+	//nolint:exhaustruct
+	l := &linter{}
 
-func NewAnalyzerWithConfigProvider(cfg func() FuncVisitorConfig) *analysis.Analyzer {
-	return newAnalyzer(getRunFuncWithConfigProvider(cfg))
-}
-
-func newAnalyzer(runFunc func(*analysis.Pass) (any, error)) *analysis.Analyzer {
-	return &analysis.Analyzer{ //nolint:exhaustruct
+	//nolint:exhaustruct
+	a := &analysis.Analyzer{
 		Name:     "errgroupctx",
 		Doc:      "Checks that errgroup closures use the context derived from a corresponding errgroup",
-		Run:      runFunc,
+		Run:      l.run,
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
 	}
-}
 
-func getRunFuncWithConfigProvider(cfg func() FuncVisitorConfig) func(*analysis.Pass) (any, error) {
-	return func(pass *analysis.Pass) (any, error) {
-		inspector, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-		if !ok {
-			return nil, errors.New("unexpectedly type is not *inspector.Inspector")
-		}
+	a.Flags.Init("errgroupctx", flag.ExitOnError)
 
-		nodeFilter := []ast.Node{
-			(*ast.FuncDecl)(nil),
-			(*ast.AssignStmt)(nil),
-			(*ast.DeclStmt)(nil),
-			(*ast.CallExpr)(nil),
-		}
+	a.Flags.Var(
+		&l.errgroupPackagePaths,
+		"pkgs",
+		"Comma-separated list of packages that provide an errgroup. Use in case you're dealing with a non-standard errgroup library.",
+	)
 
-		thisFuncVisitor := newFuncVisitor(pass, cfg())
-
-		inspector.WithStack(nodeFilter, thisFuncVisitor.Visit)
-
-		return nil, nil
-	}
+	return a
 }
