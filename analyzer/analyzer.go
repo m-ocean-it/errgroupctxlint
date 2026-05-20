@@ -41,8 +41,9 @@ func (l *linter) run(pass *analysis.Pass) (any, error) {
 }
 
 func NewAnalyzer() *analysis.Analyzer {
-	//nolint:exhaustruct
-	l := &linter{}
+	l := &linter{
+		errgroupPackagePaths: []string{DefaultPkgPath},
+	}
 
 	//nolint:exhaustruct
 	a := &analysis.Analyzer{
