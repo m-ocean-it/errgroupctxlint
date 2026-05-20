@@ -36,7 +36,7 @@ func (f *Plugin) BuildAnalyzers() ([]*analysis.Analyzer, error) {
 	a := analyzer.NewAnalyzer()
 
 	if len(f.settings.Packages) > 0 {
-		err := a.Flags.Set("pkgs", strings.Join(f.settings.Packages, ","))
+		err := a.Flags.Set(analyzer.PackagePathsFlg, strings.Join(f.settings.Packages, ","))
 		if err != nil {
 			return nil, fmt.Errorf("configuration error: %w", err)
 		}
