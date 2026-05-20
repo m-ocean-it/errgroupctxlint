@@ -7,7 +7,7 @@ import (
 	"golang.org/x/tools/go/analysis/analysistest"
 )
 
-func Test_Analyzer_flags(t *testing.T) {
+func TestAnalyzer_flags(t *testing.T) {
 	t.Parallel()
 
 	analyzer := NewAnalyzer(nil)
@@ -24,7 +24,7 @@ func Test_Analyzer_flags(t *testing.T) {
 	)
 }
 
-func Test_Analyzer_config(t *testing.T) {
+func TestAnalyzer_config(t *testing.T) {
 	t.Parallel()
 
 	analyzer := NewAnalyzer([]string{"github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup"})
