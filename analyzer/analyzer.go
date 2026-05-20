@@ -10,6 +10,8 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
+const PackagePathsFlg = "pkgs"
+
 type linter struct {
 	errgroupPackagePaths PackagePaths
 }
@@ -54,7 +56,7 @@ func NewAnalyzer() *analysis.Analyzer {
 
 	a.Flags.Var(
 		&l.errgroupPackagePaths,
-		"pkgs",
+		PackagePathsFlg,
 		"Comma-separated list of packages that provide an errgroup. Use in case you're dealing with a non-standard errgroup library.",
 	)
 

@@ -12,7 +12,7 @@ func Test_Analyzer(t *testing.T) {
 
 	analyzer := NewAnalyzer()
 
-	err := analyzer.Flags.Set("pkgs", "github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup")
+	err := analyzer.Flags.Set(PackagePathsFlg, "github.com/m-ocean-it/errgroupctxlint/testdata/base/errgroup")
 	if err != nil {
 		t.Fatal(err)
 	}
