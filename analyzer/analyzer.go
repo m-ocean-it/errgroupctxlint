@@ -66,7 +66,7 @@ func NewAnalyzer(pkgs []string) *analysis.Analyzer {
 	a.Flags.Var(
 		&l.errgroupPackagePaths,
 		PackagePathsFlg,
-		"Comma-separated list of packages that provide an errgroup. Use in case you're dealing with a non-standard errgroup library.",
+		"Comma-separated list of additional packages that provide an errgroup. Use in case you're dealing with a non-standard errgroup library.",
 	)
 
 	return a

@@ -10,9 +10,10 @@ linters:
     - err113
     - funlen
     - tagliatelle
-    - wsl
+    - wsl  # Deprecated replaced by wsl_v5
     - testpackage
-    - gomodguard
+    - gomodguard # Deprecated replaced by gomodguard_v2
+    - gomodguard_v2
   settings:
     revive:
       rules:
