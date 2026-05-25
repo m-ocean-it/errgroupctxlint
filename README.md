@@ -36,9 +36,9 @@ errgroupctxlint ./...      # lint the whole project
 errgroupctxlint <package>  # or specific packages
 ```
 
-You can specify alternative `errgroup`-packages separated with commas (useful in case you project uses some fork(s)/wrapper(s)/alternative(s) to the original `errgroup` package):
+You can specify addiontal `errgroup`-packages separated with commas (useful in case you project uses some fork(s)/wrapper(s)/alternative(s) to the original `errgroup` package):
 ```sh
-errgroupctxlint -pkgs 'golang.org/x/sync/errgroup,github.com/johejo/semerrgroup,some.org/platform/errgroup/v2' ./...
+errgroupctxlint -pkgs 'some.org/errgroup,some.org/errgroup2' ./...
 ```
 
 
