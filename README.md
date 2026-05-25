@@ -44,7 +44,7 @@ errgroupctxlint -pkgs 'some.org/errgroup,some.org/errgroup2' ./...
 
 ## [Golangci-lint](https://github.com/golangci/golangci-lint) plugin guide
 
-As of now (2026-05-12), the linter is not integrated into `golangci-lint`, however, you can build a custom version of `golangci-lint` with `errgroupctxlint` supported as a plugin. If you're interested in that, read below.
+As of now (2026-05-25), the linter is not integrated into `golangci-lint`, however, you can build a custom version of `golangci-lint` with `errgroupctxlint` supported as a plugin. If you're interested in that, read below.
 
 Read the [official guide](https://golangci-lint.run/docs/plugins/module-plugins/).
 
