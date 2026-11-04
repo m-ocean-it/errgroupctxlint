@@ -8,6 +8,7 @@ linters:
     - varnamelen
     - noinlineerr
     - err113
+    - exhaustruct # Deprecated replaced by exhaustruct_v5
     - funlen
     - tagliatelle
     - wsl  # Deprecated replaced by wsl_v5

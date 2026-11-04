@@ -53,7 +53,7 @@ func (l *linter) run(pass *analysis.Pass) (any, error) {
 func NewAnalyzer(pkgs []string) *analysis.Analyzer {
 	l := newLinter(pkgs)
 
-	//nolint:exhaustruct
+	//nolint:exhaustruct_v5
 	a := &analysis.Analyzer{
 		Name:     "errgroupctx",
 		Doc:      "Checks that errgroup closures use the context derived from a corresponding errgroup.",
